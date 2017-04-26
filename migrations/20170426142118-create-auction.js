@@ -12,7 +12,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       datetime: {
-        type: Sequelize.DATETIME
+        type: Sequelize.DATE
+      },
+      uuid:{
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,

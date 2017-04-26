@@ -20,6 +20,9 @@ module.exports = {
       coverphoto: {
         type: Sequelize.TEXT
       },
+      uuid:{
+        type: Sequelize.UUID
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
