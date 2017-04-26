@@ -1,0 +1,159 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Hello World App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /auctions:
+    x-swagger-router-controller: auction
+    get:
+      description: returns all upcoming auctions
+      responses:
+        "200":
+          description: success
+          schema:
+            type: array
+            items: 
+              $ref: "#/definitions/Auction"
+        default:
+          description: error message
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Create new auction
+      parameters:
+        - name: auction
+          in: body
+          description: auction to add to auction store
+          required: true
+          schema:
+            $ref: "#/definitions/NewAuction"
+      responses:
+        "200":
+          description: auction response
+          schema:
+            $ref: "#/definitions/Auction"
+        default:
+          description: error message
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /auctions/{auctionId}:
+    x-swagger-router-controller: auction
+    get:
+      description: returns auction with id auctionId
+      parameters:
+        - name: auctionId
+          in: path
+          type: integer
+          required: true
+          
+      responses:
+        "200":
+          description: auction
+          schema:
+            $ref: "#/definitions/Auction"
+        default:
+          description: error message
+  /auctions/{auctionId}/items/:
+    x-swagger-router-controller: auction
+    get:
+      description: returns all auction items that belongs to an auction
+      parameters:
+        - name: auctionId
+          description: id of auction
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: auction items response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/AuctionItem"
+        default:
+          description: error message
+    post:
+      description: Create new auction item and add to auction
+      parameters:
+        - name: auctionId
+          description: id of auction
+          in: path
+          required: true
+          type: integer
+        - name: auctionItem
+          in: body
+          description: auction item to add
+          required: true
+          schema:
+            $ref: "#/definitions/NewAuctionItem"
+      responses:
+        default:
+          description: error message
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  AuctionItem:
+    allOf:
+      - $ref: "#/definitions/NewAuctionItem"
+  NewAuctionItem:
+    required:
+      - name
+      - minPrice
+    properties:
+      name:
+        type: string
+      minPrice:
+        type: string
+      description:
+        type: string
+      coverPhoto:
+        type: string
+        
+  Auction:
+    allOf:
+      - $ref: "#/definitions/NewAuction"
+      - required:
+        - id
+        properties:
+          id:
+            type: integer
+            format: int64
+        
+  NewAuction:
+    required:
+      - name
+      - date
+      - time
+    properties:
+      name:
+        type: string
+      date:
+        type: string
+      time:
+        type: string
+        
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
