@@ -8,7 +8,7 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
-    "mysql2": "^1.2.0",
+    "mysql": "^2.13.0",
     "restify": "^4.0.2",
     "sequelize": "^3.30.4",
     "sequelize-cli": "^2.7.0",
